@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/apisecurity_demo
+    url: jdbc:postgresql://localhost:5460/apisecurity_demo
     username: apisecurity
     password: apisecurity
   jpa:

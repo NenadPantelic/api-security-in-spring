@@ -1,6 +1,6 @@
 #!/usr/bin/zsh
 docker run -d \
-    --name db \
+    --name apisecurity \
     -e POSTGRES_USER=apisecurity \
     -e POSTGRES_PASSWORD=apisecurity \
     -e POSTGRES_DB=apisecurity_demo \

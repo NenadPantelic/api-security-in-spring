@@ -13,6 +13,7 @@ Content-Type: application/json
   "gender": "M"  
 }
 
+
 ###
 GET {{dangerous_api_url}}/customers/test-email@np.com
 Content-Type: application/json
@@ -62,9 +63,43 @@ Content-Type: application/json
   "gender": "M"  
 }
 
+
+### Invalid email
+POST {{crud_api_url}}/customers
+Content-Type: application/json
+
+{
+      
+  "fullName": "test-full-name",
+  "email": "test-email-222com",
+  "birthDate": "2000-10-17",
+  "gender": "M"  
+}
+
+### Invalid gender
+POST {{crud_api_url}}/customers
+Content-Type: application/json
+
+{
+      
+  "fullName": "test-full-name",
+  "email": "test-email-222@gm.com",
+  "birthDate": "2000-10-17",
+  "gender": "NP"  
+}
+
 ###
 GET {{crud_api_url}}/customers/test-email-222@np.com
 Content-Type: application/json
+
+
+
+### Invalid email
+GET  {{crud_api_url}}/customers/test-email-222@np.com' OR '1' != 'john
+
+### Invalid gender
+GET {{crud_api_url}}/customers?gender=MMM
+
 
 
 ### MALICIOUS queries
