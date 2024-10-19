@@ -1,0 +1,95 @@
+@dangerous_api_url = http://localhost:8080/api/sqlinjection/danger/v1
+@crud_api_url = http://localhost:8080/api/sqlinjection/crud/v1
+
+###
+POST {{dangerous_api_url}}/customers
+Content-Type: application/json
+
+{
+      
+  "fullName": "test-full-name",
+  "email": "test-email@np.com",
+  "birthDate": "2000-10-17",
+  "gender": "M"  
+}
+
+###
+GET {{dangerous_api_url}}/customers/test-email@np.com
+Content-Type: application/json
+
+
+### MALICIOUS queries
+GET {{dangerous_api_url}}/customers/test-email@np.com' OR '1' != 'john
+
+###
+GET {{dangerous_api_url}}/customers/test-email@np.com' and 1 = 2--
+
+###
+# To find out if you are using PG
+GET {{dangerous_api_url}}/customers/1' UNION SELECT null, version(), null, null, null FROM information_schema.tables WHERE table_schema='public'--
+
+### To get all table names
+GET {{dangerous_api_url}}/customers/1' UNION SELECT null, string_agg(table_name, ','), null, null, null FROM information_schema.tables WHERE table_schema='public'--
+
+
+### To get all table names
+# drops the table
+GET {{dangerous_api_url}}/customers?gender=M'; drop table merchant;--
+
+
+
+#####
+PATCH {{dangerous_api_url}}/customers/5
+Content-Type: application/json
+
+{
+  "newFullName": "Peter Parker'';drop table merchant --"
+}
+
+
+######################
+
+
+###
+POST {{crud_api_url}}/customers
+Content-Type: application/json
+
+{
+      
+  "fullName": "test-full-name",
+  "email": "test-email-222@np.com",
+  "birthDate": "2000-10-17",
+  "gender": "M"  
+}
+
+###
+GET {{crud_api_url}}/customers/test-email-222@np.com
+Content-Type: application/json
+
+
+### MALICIOUS queries
+GET  {{crud_api_url}}/customers/test-email-222@np.com' OR '1' != 'john
+
+###
+GET  {{crud_api_url}}/customers/test-email-222@np.com' and 1 = 2--
+
+###
+# To find out if you are using PG
+GET  {{crud_api_url}}/customers/1' UNION SELECT null, version(), null, null, null FROM information_schema.tables WHERE table_schema='public'--
+
+### To get all table names
+GET  {{crud_api_url}}/customers/1' UNION SELECT null, string_agg(table_name, ','), null, null, null FROM information_schema.tables WHERE table_schema='public'--
+
+
+### To get all table names
+# drops the table
+GET { {{crud_api_url}}/customers?gender=M'; drop table merchant;--
+
+
+#####
+PATCH  {{crud_api_url}}/customers/5
+Content-Type: application/json
+
+{
+  "newFullName": "Peter Parker'';drop table merchant --"
+}
