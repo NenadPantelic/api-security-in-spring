@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Component
+//@Component
 public class SqlInjectionFilter extends OncePerRequestFilter {
 
     private static final String[] SQL_REGEX_FILTERS = new String[]{

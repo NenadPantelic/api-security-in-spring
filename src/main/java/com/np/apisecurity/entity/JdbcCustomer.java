@@ -8,7 +8,7 @@ import org.springframework.data.annotation.Id;
 import java.time.LocalDate;
 
 @Data
-public class Customer {
+public class JdbcCustomer {
 
     @Id
     private int id;
