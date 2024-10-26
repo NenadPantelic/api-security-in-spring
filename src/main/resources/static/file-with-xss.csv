@@ -1,0 +1,5 @@
+<html>
+    <body onload='alert("This is XSS in the file")'>
+    The rendered, content seems,like regular,csv file
+    </body>
+</html>

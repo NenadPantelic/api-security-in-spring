@@ -1,7 +1,7 @@
-package com.np.apisecurity.entity;
+package com.np.apisecurity.entity.sqlinjection;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+//import jakarta.persistence.Entity;
+//import jakarta.persistence.Id;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
@@ -9,10 +9,10 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-@Entity
+//@Entity
 public class JpaCustomer {
 
-    @Id
+//    @Id
     private int id;
     private String fullName;
     @Email

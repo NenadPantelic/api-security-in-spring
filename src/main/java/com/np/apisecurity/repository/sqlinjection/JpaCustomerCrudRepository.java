@@ -1,6 +1,6 @@
-package com.np.apisecurity.repository;
+package com.np.apisecurity.repository.sqlinjection;
 
-import com.np.apisecurity.entity.JpaCustomer;
+import com.np.apisecurity.entity.sqlinjection.JpaCustomer;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

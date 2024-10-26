@@ -1,4 +1,4 @@
-package com.np.apisecurity.entity;
+package com.np.apisecurity.entity.sqlinjection;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;

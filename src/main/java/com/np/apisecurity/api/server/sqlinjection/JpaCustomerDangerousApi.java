@@ -1,9 +1,8 @@
-package com.np.apisecurity.api.server;
+package com.np.apisecurity.api.server.sqlinjection;
 
-import com.np.apisecurity.entity.JpaCustomer;
-import com.np.apisecurity.repository.JpaCustomerCrudRepository;
-import com.np.apisecurity.repository.JpaCustomerDangerousDAO;
-import jakarta.persistence.GeneratedValue;
+import com.np.apisecurity.entity.sqlinjection.JpaCustomer;
+import com.np.apisecurity.repository.sqlinjection.JpaCustomerCrudRepository;
+import com.np.apisecurity.repository.sqlinjection.JpaCustomerDangerousDAO;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,10 +25,10 @@ public class JpaCustomerDangerousApi {
         return jpaCustomerCrudRepository.findByEmail(email);
     }
 
-    @GetMapping(value = "/customers") // vulnerable
-    public List<JpaCustomer> findByGender(@RequestParam(value = "gender") String gender) {
-        return jpaCustomerDangerousDAO.findByGender(gender);
-    }
+//    @GetMapping(value = "/customers") // vulnerable
+//    public List<JpaCustomer> findByGender(@RequestParam(value = "gender") String gender) {
+//        return jpaCustomerDangerousDAO.findByGender(gender);
+//    }
 
 
 }

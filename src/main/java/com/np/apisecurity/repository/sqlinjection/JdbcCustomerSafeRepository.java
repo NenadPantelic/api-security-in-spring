@@ -1,6 +1,6 @@
-package com.np.apisecurity.repository;
+package com.np.apisecurity.repository.sqlinjection;
 
-import com.np.apisecurity.entity.JdbcCustomer;
+import com.np.apisecurity.entity.sqlinjection.JdbcCustomer;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;

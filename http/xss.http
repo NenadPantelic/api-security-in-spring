@@ -1,0 +1,31 @@
+@dangerous_api_url = http://localhost:8080/api/xss/dangerous/v1
+
+@safe_api_url = http://localhost:8080/api/xss/safe/v1
+
+
+### Good 
+GET {{dangerous_api_url}}/greeting?name=Nenad
+
+### Bad
+GET {{dangerous_api_url}}/greeting?name=Nenad <img src='x' onerror='alert("This is XSS")'>
+
+
+### Bad
+POST {{dangerous_api_url}}/articles
+Content-Type: application/json
+
+{
+  "content": "We have so many stars in the galaxy. <img src='' onerror='alert(\"This is XSS in article\")>"
+}
+
+
+### Bad
+GET {{safe_api_url}}/greeting?name=Namewith12345
+
+### Bad
+POST {{safe_api_url}}/articles
+Content-Type: text/plain
+
+We have so many stars in the galaxy. <img src='' onerror='alert(\"This is XSS in article\")>
+
+

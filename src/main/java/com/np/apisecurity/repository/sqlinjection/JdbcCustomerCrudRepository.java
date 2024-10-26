@@ -1,6 +1,6 @@
-package com.np.apisecurity.repository;
+package com.np.apisecurity.repository.sqlinjection;
 
-import com.np.apisecurity.entity.JdbcCustomer;
+import com.np.apisecurity.entity.sqlinjection.JdbcCustomer;
 //import org.springframework.data.jdbc.repository.query.Query;
 //import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;

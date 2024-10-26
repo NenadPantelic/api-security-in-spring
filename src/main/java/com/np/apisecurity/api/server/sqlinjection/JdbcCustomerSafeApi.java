@@ -1,24 +1,24 @@
-package com.np.apisecurity.api.server;
+package com.np.apisecurity.api.server.sqlinjection;
 
-import com.np.apisecurity.dto.NewCustomerFullName;
-import com.np.apisecurity.entity.JdbcCustomer;
-import com.np.apisecurity.repository.JdbcCustomerDangerousRepository;
+import com.np.apisecurity.dto.request.NewCustomerFullName;
+import com.np.apisecurity.entity.sqlinjection.JdbcCustomer;
+import com.np.apisecurity.repository.sqlinjection.JdbcCustomerDangerousRepository;
 import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.validation.annotation.Validated;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Slf4j
-@RestController
-@RequestMapping("/api/sqlinjection/dangerous/v1")
-@Validated
-public class JdbcCustomerDangerousApi {
+//@Slf4j
+//@RestController
+//@RequestMapping("/api/sqlinjection/danger/v1")
+//@Validated
+public class JdbcCustomerSafeApi {
 
     private final JdbcCustomerDangerousRepository jdbcCustomerDangerousRepository;
 
-    public JdbcCustomerDangerousApi(JdbcCustomerDangerousRepository jdbcCustomerDangerousRepository) {
+    public JdbcCustomerSafeApi(JdbcCustomerDangerousRepository jdbcCustomerDangerousRepository) {
         this.jdbcCustomerDangerousRepository = jdbcCustomerDangerousRepository;
     }
 
@@ -28,12 +28,13 @@ public class JdbcCustomerDangerousApi {
     }
 
     @GetMapping(value = "/customers/{email}")
-    public List<JdbcCustomer> getUserByEmail(@PathVariable("email") String email) {
+    public List<JdbcCustomer> getUserByEmail(@PathVariable("email") @Email String email) {
         return jdbcCustomerDangerousRepository.findByEmail(email);
     }
 
     @GetMapping(value = "/customers")
-    public List<JdbcCustomer> getUserByGender(@RequestParam("gender") String gender) {
+    public List<JdbcCustomer> getUserByGender(@RequestParam("gender")
+                                          @Pattern(regexp = "^[MF]$", message = "Invalid gender.") String gender) {
         return jdbcCustomerDangerousRepository.findByGender(gender);
     }
 

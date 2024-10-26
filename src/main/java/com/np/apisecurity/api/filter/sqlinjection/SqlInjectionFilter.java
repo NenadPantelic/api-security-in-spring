@@ -1,5 +1,6 @@
-package com.np.apisecurity.api.filter;
+package com.np.apisecurity.api.filter.sqlinjection;
 
+import com.np.apisecurity.api.filter.CachedBodyHttpServletRequest;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

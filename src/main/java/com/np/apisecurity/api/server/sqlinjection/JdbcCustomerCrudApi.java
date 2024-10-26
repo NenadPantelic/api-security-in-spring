@@ -1,9 +1,8 @@
-package com.np.apisecurity.api.server;
+package com.np.apisecurity.api.server.sqlinjection;
 
-import com.np.apisecurity.dto.NewCustomerFullName;
-import com.np.apisecurity.entity.JdbcCustomer;
-import com.np.apisecurity.repository.JdbcCustomerCrudRepository;
-import jakarta.validation.Valid;
+import com.np.apisecurity.dto.request.NewCustomerFullName;
+import com.np.apisecurity.entity.sqlinjection.JdbcCustomer;
+import com.np.apisecurity.repository.sqlinjection.JdbcCustomerCrudRepository;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import org.springframework.web.bind.annotation.*;
