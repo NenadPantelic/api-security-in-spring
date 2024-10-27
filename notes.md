@@ -211,3 +211,44 @@ npm install @tinymce/tinymce-react
   6. IP whitelisting
   7. secure by API key
   8. other common functionalities
+
+## Denial of service (DoS)
+
+- prevents legitimate users to access API
+- it produces a large amount of traffic to consume API resource
+- it can be caused by a single bad client 
+- it can be also a distributed attack - many IP addresses are involved across the network which makes the situation 
+more complex (distributed DoS = DDoS)
+
+- unlike SQL injection and XSS, this attack does not exploit weakness in code, since every system can be a target of DoS
+or DDoS since every system needs some resources to run
+- in DDoS an attacker can send the script to many servers, which then executes it and bombards the API of interest - IP 
+spoofing
+- DoS attacks can be massive, meaning many requests are made - all of them eat a small portion of resources, but due to 
+attack's massiveness, the problem arises
+- another option is having fewer requests within the rate limit, but all of them are very hungry in terms of resources 
+which causes the denial of service (large response payload, inefficient db queries)
+
+### Prevention
+
+#### IP restriction
+- allow/reject requests based on IP
+- usually implemented in network firewall
+- __whitelist__: allow specific IP, close others
+  - works in business-to-business apps, where the IPs are known
+  - not possible for public API (we do not know all incoming-requests IPs)
+  - also, an attacker can use another legitimate IP -> IP spoofing
+- __blacklist__: open for everyone, except for specific IPs
+  - this is not a prevention, it usually comes after an attack has been executed, so we know the attacker's IP now
+  - the problem is, an attacker can use the dynamic IP which always changes
+  
+#### Rate limiting
+- allow certain number of requests, reject when limit is reached
+- prevents the server capacity overloading
+- reject some rather than crash all
+- retry later when the limit is refreshed or system comes back to normal
+
+#### Pagination
+- return a small portion of data on each hit
+- limit the max amount of data on each hit
+- combine with rate limiting

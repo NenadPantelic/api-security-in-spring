@@ -29,3 +29,8 @@ Content-Type: text/plain
 We have so many stars in the galaxy. <img src='' onerror='alert(\"This is XSS in article\")>
 
 
+###
+GET {{dangerous_api_url}}/file
+
+# http://localhost:8080/api/xss/dangerous/v1/file
+# http://localhost:8080/api/xss/safe/v1/file
