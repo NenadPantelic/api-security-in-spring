@@ -259,3 +259,177 @@ npm install @tinymce/tinymce-react
 
 - Linux firewalls: IP tables, firewalld
 
+## Encode, encrypt, hash
+
+### Encoding
+
+- Encode
+
+```
+Original string: Today is a rainy day.
+Encode using: Base64
+Encoded string: VG9kYXkgaXMgYSByYWlueSBkYXku
+```
+
+```
+Original string: is four+five = nine?
+Encode using: URL encode
+Encoded string: is%20four%2Bfive%20%3D%20nine%3F
+```
+
+Encode:
+
+- not for security!
+- Data transformation for proper consumption by other systems
+- E.g. images are encoded with Base64, so it can be transferred as printable characters
+- on the other side, system can decode it to get the original data
+- easy to encode/decode
+- just know the encoding
+- URL encoding the URL, so special characters like space or question mark which can be misleading
+- We don't need to encode the whole URL, just the query parameter
+
+### Encrypt
+
+- used for security
+- data can only be consumed by a valid recipient
+- using key/password to decrypt (reverse encrypt)
+- key/password kept secret
+- example: AES, 3DES
+
+```
+Original string: Today is a rainy day.
+Encrypt using: AES-128-ECB
+Secret key: MySecretKey12345
+Encrypted string: Encoded as Base64
+bxm6YI/1kdJKTtaQu27GcYsf/C+MIElTNxvwZ2oHkrU=
+```
+
+```
+Original string: is four + five = nine?
+Encrypt using: AES-256-CBC
+Secret key: MyVeryLongSecretKeyForEncryption
+Encrypted string: Encoded as Base64
+Hi+7upoOVc4Up+/Whqv1XNGH4WEqvmEJVIpTJwLx+TQ=
+```
+
+### Hash
+
+- used for security
+- used for data integrity (checksum/signature) - hash some object, piece of data and if something change in the original
+  plain object, its hash will be different, meaning something has changes (we don't know what exactly, but that' not
+  important)
+- cannot be reversed (can't take the original data)
+- takes input and produces a fixed-length string
+- if two objects are the same, and you hash them, you will get the same hashed value
+- two different objects can have the same hashed value, but the chances are very small, even none for good hashing
+  algorithms
+- example: SHA, Bcrypt, Argon2
+
+```
+Original string: Today is a rainy day.
+Hash using: SHA-256
+Hashed string: 7884def76ea3cd8f918da945ad789b6713d7a94271d42bb8853bf41572afdd54
+```
+
+```
+Original string: is four + five = nine?
+Hash using: BCrypt
+No of rounds: 12
+Hashed string:
+$2a$12$qG.6T6NdBSAnDjW0YWPwCe0Nreq0ntbnU1ufFsfZ16vlSfVT2hCvm
+```
+
+- Salt and hash
+    - random character(s) added to the original string; represents an extra layer of security
+    - how to compare hashed values:
+        - we have a plain string, salt and the hashed string
+        - hash(plain string + salt ) == hashed string
+
+```
+Original string: OhMyPassword
+Hash using: SHA-256
+Salt (unique): CBXOPM
+Original + salt: CBXOPMOhMyPassword
+Hashed string: 
+2a9f95053926032078157b5f24f854a9a7b9bedaedd46fcf87c3f7b1c6200473
+```
+
+### How to protect a password in database?
+
+- use hash with salt
+- unique salt for each user to increase the security level
+- encryption:
+    - an attacker can steal the user database and an encryption key
+    - decrypt all user data, get plain passwords
+    - many users tend to reuse the same username and password in other places as well
+- Hash:
+    - not reversible, no plain password
+    - better with salt
+
+- Where should I keep my salt?
+    - if the salt is per transaction, then it doesn't have to be stored
+    - if it is unique per user, then it can be stored in the database
+
+### HMAC - Hash-based Message Authentication code
+
+- it's like a signature sent with some data use to verify that the data has not been altered or replaced -> verify
+  message integrity
+- HMAC is calculated by a client
+
+Sample rule:
+
+```
+message = lowercase(HTTP verb) + \n + URI + \n + body.amount + \n + body.full_name + \n + header.Register-Date
+```
+
+- every client usually has its own unique secret key
+- `HMAC = HMAC-SHA512(message, secret key)` and it sends HMAC value in header
+- the API server knows the rule and the secret key for every consumer; it calculates HMAC based on the same rule
+- compares what it received with the locally computed value
+    - if they are the same, it knows the message is authentic
+    - otherwise, a message is corrupted or tampered
+
+- Since HMAC is hash, what about salt?
+- We are using Nonce for that
+- Nonce:
+    - large sequence number
+    - used once (usually on certain time period)
+    - add nonce to message construct before hashing
+    - the same message, different nonce = different HMAC
+
+### Encode, Encrypt, Hash use case
+
+#### Base64
+
+- can be used to encode a binary file and transfer it over the network
+- e.g. an image can be encoded
+- downsides:
+    - larger size
+    - additional process on sender and receiver
+    - not saved as base64 (we store the original object usually)
+
+- Recommendations for binary/image transfer:
+    - usable, but not best
+    - use multipart
+    - use URL and download from it
+
+#### URL encode
+
+- useful to encode a URL and transmit some info in it
+    - `mysite.com/company?name=Ben/John & Partner`
+    - Whitespace, `/`, and `&` are special characters in URL. Might cause unpredictability during processing
+    - `mysite.com/company?name=Ben%2FJohn%20%26%20Partner` - we get the safe representation
+
+#### Encrypt/decrypt
+- useful when we need to securely transfer the data, but later we need the original data
+- example:
+  - `api.com/customer?phone=0038164356721` 
+  - plain phone number, an attacker may get it
+  - if we encrypt it -> `api.com/customer?phone=<encrypted>`, we are safe
+  - we can use encryption on DB level to keep the data secret (e.g. salary), so even if the database leaks, it is useless
+
+### Hash
+- Message integrity by giving signature
+- check API request vs signature
+- message vs signature different: bad message
+- HMAC

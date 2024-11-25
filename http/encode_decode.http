@@ -1,0 +1,107 @@
+### Encode Base64
+POST http://localhost:8080/api/v1/encode/base64
+Content-Type: application/json
+
+{
+	"text": "Today is a rainy day."
+}
+
+### Deccode Base64
+POST http://localhost:8080/api/v1/decode/base64
+Content-Type: application/json
+
+{
+	"text": "VG9kYXkgaXMgYSByYWlueSBkYXku"
+}
+
+
+### Encode URL
+POST http://localhost:8080/api/v1/encode/url
+Content-Type: application/json
+
+{
+	"text": "is four + five = nine?"
+}
+
+
+### Deccode URL
+POST http://localhost:8080/api/v1/decode/url
+Content-Type: application/json
+
+{
+	"text": "is%20four%20%2B%20five%20%3D%20nine%3F"
+}
+
+######
+
+### Encrypt AES
+POST http://localhost:8080/api/v1/encrypt
+Content-Type: application/json
+
+{
+	"text": "Today is a rainy day."
+}
+
+### Decrypt AES
+POST http://localhost:8080/api/v1/decrypt
+Content-Type: application/json
+
+{
+	"text": "1ddd4ec1123597368762eb4849aaf9ad53c5500294baeb57e28c437820d3de69"
+}
+
+#############
+### SHA256
+POST http://localhost:8080/api/v1/hash/sha256
+Content-Type: application/json
+
+{
+	"text": "Today is a rainy day."
+}
+
+### SHA256 match
+POST http://localhost:8080/api/v1/hash/sha256/match
+Content-Type: application/json
+X-Hash: 3f52f32f9df1bcb469be9778d08087bc1e7d9cfb64c09849e99973b3f9012c03
+
+{
+	"text": "Today is a rainy day."
+}
+
+### SHA256 match
+POST http://localhost:8080/api/v1/hash/sha256/match
+Content-Type: application/json
+X-Hash: 8f1d20fc62d79bc0a5b77ed124fde74d315b94c06f7b89a4c5ef408986e0acdb
+
+{
+	"text": "Today is a rainy day."
+}
+
+#####
+
+### BCrypt
+POST http://localhost:8080/api/v1/hash/bcrypt
+Content-Type: application/json
+
+{
+	"text": "Today is a rainy day."
+}
+
+### BCrypt match
+POST http://localhost:8080/api/v1/hash/bcrypt/match
+Content-Type: application/json
+X-Hash: $2y$05$O1HgaBTFYlnDKkv3KjOwZeP.WxmLXNgPJu1wDEaK8M7C2lsX6rwKe
+
+{
+	"text": "Today is a rainy day."
+}
+
+
+### BCrypt match
+POST http://localhost:8080/api/v1/hash/bcrypt/match
+Content-Type: application/json
+X-Hash: $2y$05$O1HgaBTFYlnDKkv3KjOwZeP.WxmLXNgPJu1wDEaK8M7C2lsX6rwKe
+
+{
+	"text": "Today is a raAiny day."
+}
