@@ -11,7 +11,15 @@ spring:
       ddl-auto: none
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
-  logging:
-    pattern:
-      console: "%clr(%d{HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:%5p}) %clr(---){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}"
-    file: logs/my-app-name
+logging:
+  pattern:
+    console: "%clr(%d{HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:%5p}) %clr(---){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}"
+  file: logs/my-app-name
+
+#server:
+#  ssl:
+#    key-store-type: PKCS12
+#    key-store: classpath:keystore/apisecurity.p12
+#    key-store-password: apisecurity
+#    key-alias: apisecurity
+#    enabled: true

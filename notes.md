@@ -421,15 +421,97 @@ message = lowercase(HTTP verb) + \n + URI + \n + body.amount + \n + body.full_na
     - `mysite.com/company?name=Ben%2FJohn%20%26%20Partner` - we get the safe representation
 
 #### Encrypt/decrypt
+
 - useful when we need to securely transfer the data, but later we need the original data
 - example:
-  - `api.com/customer?phone=0038164356721` 
-  - plain phone number, an attacker may get it
-  - if we encrypt it -> `api.com/customer?phone=<encrypted>`, we are safe
-  - we can use encryption on DB level to keep the data secret (e.g. salary), so even if the database leaks, it is useless
+    - `api.com/customer?phone=0038164356721`
+    - plain phone number, an attacker may get it
+    - if we encrypt it -> `api.com/customer?phone=<encrypted>`, we are safe
+    - we can use encryption on DB level to keep the data secret (e.g. salary), so even if the database leaks, it is
+      useless
 
 ### Hash
+
 - Message integrity by giving signature
 - check API request vs signature
 - message vs signature different: bad message
 - HMAC
+
+## Data transmission
+
+### Free Wi-Fi trap
+
+- free wifi in coffee shop
+- it might not be owned by the coffee shop
+- an attacker setup the free-wifi to perform packet sniffing
+- if the user sends some sensitive data like username, password, credit card number etc. to unsecure website, an
+  attacker
+  may steal it
+
+### Prevention
+
+- HTTPS
+    - encrypt the data transmission
+    - to get an HTTPS, we must obtain a TLS certificate
+    - this certificate is issued by CA (Certificate Authority) - trustworthy 3rd-party entity which is trusted in the
+      client-server communication. Browser will only trust certificate by CA (self-signed certificates are not trusted)
+
+- Generating a key with expiry time of 10 years
+
+```
+keytool -genkeypair -alias apisecurity -keyalg RSA -keysize 2048 -storetype PKCS12 -keystore apisecurity.p12 -validity 3650
+```
+
+- An example of curl with https:
+
+```
+curl --request POST \
+  --url https://localhost:8080/api/v1/encode/url \
+  --header 'Content-Type: application/json' \
+  --cookie JSESSIONID=BFF5A546D54F4E1B0523E8DA987BBD43 \
+  --data '{
+        "text": "is four + five = nine?"
+}' -k
+
+```
+
+- instead of having HTTPS applied to all internal services, we can apply it to load balancer or firewall (entrypoints)
+  to offload the SSL termination and make it more simple, yet secure
+- if we have an API consumed by the browser, use HTTPS
+- set HTTP `Strict-Transport-Security (HSTS)`
+- `HSTS` response header:
+
+```
+Strict-Transport-Security max-age=<age in seconds>; includeSubDomains
+```
+
+- saved in the browser, informing about the validity of the certificate and explaining that subdomains should be access
+  with HTTPS
+- Redirect HTTP to HTTPS on reverse proxy (nginx) and set HSTS header
+- Sample nginx configuration
+
+```
+server {
+  listen 80;
+  server_name _;
+  add_header Strict-Transport-Security "max-age=31536000; includeSubDomains";
+  return 301 https://$host$request_uri;
+}
+
+server {
+  listen 443;
+  server_name _;
+  add_header Strict-Transport-Security "max-age=31536000; includeSubDomains";
+  ssl_certificate /path/to/certificate;
+  ssl_certificate_key /path/to/certificate_key; 
+}
+```
+
+```
+location /https {
+    return 200 'Hello there';
+    add_header Content-Type text/plain;
+}
+```
+- if you have HSTS header set and the HTTPS endpoint is not present, it will return an error
+- Chrome: `chrome://net-internals/#hsts` - to check which domains should be treated only with https
