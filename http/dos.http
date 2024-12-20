@@ -1,7 +1,6 @@
 @dangerous-api-url=http://localhost:8080/api/dos/v1
 
 
-
 #### Get green
 GET {{dangerous-api-url}}/green
 

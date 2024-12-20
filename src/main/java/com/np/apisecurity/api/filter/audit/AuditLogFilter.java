@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 
 @Slf4j
-@Component
+//@Component
 public class AuditLogFilter extends OncePerRequestFilter {
 
     private final ObjectMapper objectMapper;

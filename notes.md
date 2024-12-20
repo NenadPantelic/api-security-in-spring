@@ -513,5 +513,84 @@ location /https {
     add_header Content-Type text/plain;
 }
 ```
+
 - if you have HSTS header set and the HTTPS endpoint is not present, it will return an error
 - Chrome: `chrome://net-internals/#hsts` - to check which domains should be treated only with https
+
+## Audit log
+
+- application log for system trace
+- log in security aspect
+- audit log: who is doing what
+- record attempted operations to find out abuse
+- write log to durable storage
+
+### Where to keep log
+
+- text file
+- database
+- ELK (Elasticsearch, Logstash, Kibana) - free
+- Paid: Loggly, Datadog
+
+- who: open audit logs to small group of trusted auditors
+- auditors are not system administrators/engineers
+- separation of duties
+    - different aspect of actions, different people
+    - no single person responsible for the entire aspect
+- Example: payment requester different with payment approver
+- a person who administers the system should not manage the logs (administrator can remove his accesses from logs)
+
+- what to log:
+    - timestamp (with enough precision)
+    - HTTP method
+    - API path
+    - query string
+    - authentication details (uncovered, no leak)
+    - request body
+
+- How:
+    - log must be meaningful
+    - use specialized tools with logs in JSON format
+- Audit log & threat
+    - not having it is a threat
+    - not just technical
+    - wrong suspect > wrong action > additional cost
+    - correct suspect > correct action > faster resolution
+
+## Basic authentication
+- Identify and verify the user identity
+- Basic auth: username & password
+- HTTP Basic authentication:
+  - HTTP Authorization header
+  - Basic base64(username:password)
+  - Example:
+    - username: anna
+    - password: thepassword
+    - Basic auth: YW5uYTp0aGVwYXNzd29yZA==
+  - Don't do this:
+    - inject username and password into the URL: mysite.com/api/yyy?user=anna&password=thepassword
+    - base64 encoded string is not a security measure (not a secret)
+
+Practical:
+```
+user_id: surrotage PK
+username: 
+encrypted email
+- secret key: TheSecretKey2468
+- IV: L1v4g8gT1DqjSPB6
+Email is lowercase (before encrypt)
+
+password_hash: Hashed password using bcrypt
+salt: Salt for hashing
+display_name: Name to be shown
+```
+
+- Basic auth header -> `Basic <encoded string>`
+
+#### WWW-Authenticate
+- Optional WWW-Authenticate response header tells the client which auth mechanism to use, e.g.:
+```
+WWW-Authenticate: Basic realm="Need a valid credential to access this API"
+```
+Browser will know to serve the basic auth modal. 
+
