@@ -558,20 +558,22 @@ location /https {
     - correct suspect > correct action > faster resolution
 
 ## Basic authentication
+
 - Identify and verify the user identity
 - Basic auth: username & password
 - HTTP Basic authentication:
-  - HTTP Authorization header
-  - Basic base64(username:password)
-  - Example:
-    - username: anna
-    - password: thepassword
-    - Basic auth: YW5uYTp0aGVwYXNzd29yZA==
-  - Don't do this:
-    - inject username and password into the URL: mysite.com/api/yyy?user=anna&password=thepassword
-    - base64 encoded string is not a security measure (not a secret)
+    - HTTP Authorization header
+    - Basic base64(username:password)
+    - Example:
+        - username: anna
+        - password: thepassword
+        - Basic auth: YW5uYTp0aGVwYXNzd29yZA==
+    - Don't do this:
+        - inject username and password into the URL: mysite.com/api/yyy?user=anna&password=thepassword
+        - base64 encoded string is not a security measure (not a secret)
 
 Practical:
+
 ```
 user_id: surrotage PK
 username: 
@@ -588,9 +590,80 @@ display_name: Name to be shown
 - Basic auth header -> `Basic <encoded string>`
 
 #### WWW-Authenticate
+
 - Optional WWW-Authenticate response header tells the client which auth mechanism to use, e.g.:
+
 ```
 WWW-Authenticate: Basic realm="Need a valid credential to access this API"
 ```
-Browser will know to serve the basic auth modal. 
 
+Browser will know to serve the basic auth modal.
+
+## Access Control List
+
+- All for all idea
+    - open all endpoints to all users
+    - everyone with the correct credential can access the API
+    - bad idea
+        - endpoints:
+
+        1. POST /admin/user: creates a new user -> should be restricted only to admin
+        2. DELETE /admin/user: deletes a user -> should be restricted only to admin
+        3. GET /admin/user: get the user details -> should be restricted only to admin
+        4. GET /weather: get current weather -> informational, open to everyone
+        5. GET /time: get current time -> informational, open to everyone
+
+### Access control list
+
+- Principle of the Least authority
+    - enough to do the job
+    - too many: damage the system
+    - too few: job not done well
+- Access Control List:
+    - list of user given access to object & permission what to do
+    - limit access to endpoints & HTTP method
+
+
+- An example; we have 4 users and 5 endpoints:
+- Users:
+
+1. Sally
+2. Admin
+3. Anna
+4. John
+
+- Endpoints:
+
+1. POST /admin/user: creates a new user -> should be restricted only to admin
+2. DELETE /admin/user: deletes a user -> should be restricted only to admin
+3. GET /admin/user: get the user details -> should be restricted only to admin
+4. GET /weather: get current weather -> informational, open to everyone
+5. GET /time: get current time -> informational, open to everyone
+
+- 1, 2, 3 only to Admin
+- 4 to Admin, Sally and John
+- 5 to everyone
+
+### Authentication & Authorization
+
+- Authentication
+    - identify user
+    - username, password - basic auth
+    - more advanced - OTP, authentication apps, biometric
+- Authorization
+    - Access control list
+    - Grants/revokes access to resource
+    - Grants/revokes access to perform an action
+- Authentication should be followed by authorization
+
+- 401 Unauthorized -> authentication failure
+- 403 Forbidden -> authorization failure
+
+- 401 Unauthorized:
+    - failed authentication (no credential, incorrect credential, wrong type - API requires biometric, but receives
+      basic)
+    - the client can try with another credential (WWW-Authenticate header can be sent in response to inform the client
+      about the authentication type it needs)
+- 403 Forbidden:
+    - credential (authentication) is fine
+    - no access to resource/operation
