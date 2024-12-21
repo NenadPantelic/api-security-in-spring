@@ -8,7 +8,7 @@ import org.springframework.data.annotation.Id;
 @Data
 public class BasicAclUri {
 
-    @Id
+    //@Id
     private int id;
     private String method;
     private String uri;

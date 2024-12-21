@@ -1,5 +1,7 @@
 package com.np.apisecurity.api.util;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
@@ -24,6 +26,10 @@ public class SecureStringUtil {
         }
 
         return sb.toString();
+    }
+
+    public static boolean equals(String first, String second) {
+        return MessageDigest.isEqual(first.getBytes(StandardCharsets.UTF_8), second.getBytes(StandardCharsets.UTF_8));
     }
 
 }

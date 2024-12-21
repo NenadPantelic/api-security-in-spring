@@ -16,7 +16,7 @@ public class BasicAuthFilterConfig {
     }
 
 //    @Bean
-//    public FilterRegistrationBean<BasicAuthFilter> basicAuthFilter() {
+//    public FilterRegistrationBean<BasicAuthFilter> sessionCookieAuthFilter() {
 //        var registrationBean = new FilterRegistrationBean<BasicAuthFilter>();
 //        registrationBean.setFilter(new BasicAuthFilter(basicAuthUserRepository));
 //        registrationBean.addUrlPatterns("/api/auth/basic/v1/time");

@@ -22,8 +22,8 @@ public class BasicAuthUser {
     private String passwordHash;
     private String salt;
     private String displayName;
-    @MappedCollection(idColumn = "id")
-    private Set<BasicAclUserUriRef> allowedUris;
+//    @MappedCollection(idColumn = "id")
+//    private Set<BasicAclUserUriRef> allowedUris;
     /*
     * Create these two users:
     * 1. User 1

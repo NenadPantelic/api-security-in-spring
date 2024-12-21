@@ -1,17 +1,17 @@
-package com.np.apisecurity.api.filter.acl;
+package com.np.apisecurity.api.filter.sessioncookie;
 
 import com.np.apisecurity.api.auth.basic.BasicAuthApi;
 import com.np.apisecurity.api.util.EncodeDecodeUtil;
 import com.np.apisecurity.api.util.EncryptDecryptUtil;
 import com.np.apisecurity.api.util.HashUtil;
+import com.np.apisecurity.constant.SessionCookieConstant;
 import com.np.apisecurity.entity.basicauth.BasicAuthUser;
 import com.np.apisecurity.repository.basicauth.BasicAuthUserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,15 +24,14 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.util.Optional;
 
-//@Configuration
-@Order(0) // first in the chain
-public class BasicAuthAclUserFilter extends OncePerRequestFilter {
+@Slf4j
+public class SessionCookieAuthFilter extends OncePerRequestFilter {
 
     private static final String BASIC_AUTH = "Basic ";
 
     private final BasicAuthUserRepository basicAuthUserRepository;
 
-    public BasicAuthAclUserFilter(BasicAuthUserRepository basicAuthUserRepository) {
+    public SessionCookieAuthFilter(BasicAuthUserRepository basicAuthUserRepository) {
         this.basicAuthUserRepository = basicAuthUserRepository;
     }
 
@@ -41,10 +40,10 @@ public class BasicAuthAclUserFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        var basicAuthStr = request.getHeader(HttpHeaders.AUTHORIZATION);
+        var basicAuthToken = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         try {
-            if (isValidBasicAuth(basicAuthStr)) {
+            if (isValidBasicAuth(basicAuthToken, request)) {
                 filterChain.doFilter(request, response);
             } else {
                 response.setStatus(HttpStatus.UNAUTHORIZED.value());
@@ -56,20 +55,28 @@ public class BasicAuthAclUserFilter extends OncePerRequestFilter {
         }
     }
 
-    private boolean isValidBasicAuth(String basicAuthStr) throws
+    private boolean isValidBasicAuth(String basicAuthToken, HttpServletRequest request) throws
             InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
-        if (!basicAuthStr.startsWith(BASIC_AUTH)) {
+        if (!basicAuthToken.startsWith(BASIC_AUTH)) {
             return false;
         }
 
-        String authStr = basicAuthStr.substring(BASIC_AUTH.length());
+        String authStr = basicAuthToken.substring(BASIC_AUTH.length());
         String usernamePasswordJoined = EncodeDecodeUtil.decodeBase64(authStr);
         String[] userCredentials = usernamePasswordJoined.split(":");
 
         String encryptedUsername = EncryptDecryptUtil.encryptAes(userCredentials[0], BasicAuthApi.SECRET_KEY);
-        Optional<BasicAuthUser> user = basicAuthUserRepository.findByUsername(encryptedUsername);
-        return user.filter(
-                        basicAuthUser -> HashUtil.isBcryptMatch(userCredentials[1], basicAuthUser.getPasswordHash()))
-                .isPresent();
+        Optional<BasicAuthUser> userOptional = basicAuthUserRepository.findByUsername(encryptedUsername);
+        if (userOptional.isEmpty()) {
+            return false;
+        }
+
+        BasicAuthUser user = userOptional.get();
+        if (HashUtil.isBcryptMatch(userCredentials[1], user.getPasswordHash())) {
+            request.setAttribute(SessionCookieConstant.REQUEST_ATTRIBUTE_USERNAME, encryptedUsername);
+            return true;
+        }
+
+        return false;
     }
 }

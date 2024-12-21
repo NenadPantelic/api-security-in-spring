@@ -21,7 +21,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-@Configuration
+//@Configuration
 @Order(1)
 public class BasicAclUriFilter extends OncePerRequestFilter {
 
@@ -63,19 +63,20 @@ public class BasicAclUriFilter extends OncePerRequestFilter {
     }
 
     private boolean canAccessUri(String method, String requestURI, BasicAuthUser basicAuthUser) {
-        for (var uriRef : basicAuthUser.getAllowedUris()) {
-            var allowedUriOptional = basicAclUriRepository.findById(uriRef.getUriId());
-            if (allowedUriOptional.isEmpty()) {
-                continue;
-            }
-
-            var allowedUri = allowedUriOptional.get();
-            if (StringUtils.equalsIgnoreCase(allowedUri.getMethod(), method) &&
-                    Pattern.matches(allowedUri.getUri(), requestURI)) {
-                return true;
-            }
-        }
-
+//        for (var uriRef : basicAuthUser.getAllowedUris()) {
+//            var allowedUriOptional = basicAclUriRepository.findById(uriRef.getUriId());
+//            if (allowedUriOptional.isEmpty()) {
+//                continue;
+//            }
+//
+//            var allowedUri = allowedUriOptional.get();
+//            if (StringUtils.equalsIgnoreCase(allowedUri.getMethod(), method) &&
+//                    Pattern.matches(allowedUri.getUri(), requestURI)) {
+//                return true;
+//            }
+//        }
+//
+//        return false;
         return false;
     }
 }

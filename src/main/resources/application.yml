@@ -25,3 +25,9 @@ logging:
 #    key-store-password: apisecurity
 #    key-alias: apisecurity
 #    enabled: true
+
+
+servlet:
+  session:
+    cookie:
+      max-age: 15m
