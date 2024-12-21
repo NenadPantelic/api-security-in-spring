@@ -1,4 +1,4 @@
-package com.np.apisecurity.api.auth.basic;
+package com.np.apisecurity.api.server.auth.basic;
 
 import com.np.apisecurity.api.util.EncryptDecryptUtil;
 import com.np.apisecurity.api.util.HashUtil;

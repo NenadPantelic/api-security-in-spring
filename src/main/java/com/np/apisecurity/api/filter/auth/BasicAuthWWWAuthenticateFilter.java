@@ -1,6 +1,6 @@
 package com.np.apisecurity.api.filter.auth;
 
-import com.np.apisecurity.api.auth.basic.BasicAuthApi;
+import com.np.apisecurity.api.server.auth.basic.BasicAuthApi;
 import com.np.apisecurity.api.util.EncodeDecodeUtil;
 import com.np.apisecurity.api.util.EncryptDecryptUtil;
 import com.np.apisecurity.api.util.HashUtil;
@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.crypto.BadPaddingException;

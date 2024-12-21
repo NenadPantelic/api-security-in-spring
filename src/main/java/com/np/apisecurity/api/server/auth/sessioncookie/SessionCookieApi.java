@@ -1,4 +1,4 @@
-package com.np.apisecurity.api.auth.sessioncookie;
+package com.np.apisecurity.api.server.auth.sessioncookie;
 
 import com.np.apisecurity.constant.SessionCookieConstant;
 import com.np.apisecurity.dto.internal.SessionCookieToken;

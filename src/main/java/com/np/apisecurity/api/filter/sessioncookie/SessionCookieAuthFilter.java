@@ -1,6 +1,6 @@
 package com.np.apisecurity.api.filter.sessioncookie;
 
-import com.np.apisecurity.api.auth.basic.BasicAuthApi;
+import com.np.apisecurity.api.server.auth.basic.BasicAuthApi;
 import com.np.apisecurity.api.util.EncodeDecodeUtil;
 import com.np.apisecurity.api.util.EncryptDecryptUtil;
 import com.np.apisecurity.api.util.HashUtil;

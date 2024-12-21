@@ -1,4 +1,4 @@
-package com.np.apisecurity.api.auth.acl;
+package com.np.apisecurity.api.server.auth.acl;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;

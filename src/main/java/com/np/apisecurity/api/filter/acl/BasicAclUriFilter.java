@@ -1,6 +1,6 @@
 package com.np.apisecurity.api.filter.acl;
 
-import com.np.apisecurity.api.auth.basic.BasicAuthApi;
+import com.np.apisecurity.api.server.auth.basic.BasicAuthApi;
 import com.np.apisecurity.api.util.EncodeDecodeUtil;
 import com.np.apisecurity.api.util.EncryptDecryptUtil;
 import com.np.apisecurity.entity.basicauth.BasicAuthUser;
@@ -10,8 +10,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -19,7 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 //@Configuration
 @Order(1)

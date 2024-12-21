@@ -8,7 +8,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
+//@Configuration
 public class SessionCookieFilterConfig {
 
     private final BasicAuthUserRepository basicAuthUserRepository;

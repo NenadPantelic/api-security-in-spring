@@ -667,3 +667,136 @@ Browser will know to serve the basic auth modal.
 - 403 Forbidden:
     - credential (authentication) is fine
     - no access to resource/operation
+
+## Token authentication
+
+- Basic authentication drawbacks:
+    - sends the plain username and password for each API (prone to stealing the credentials)
+    - hash is slow process
+        - designed to be slow (to prevent the attacks)
+        - a lot of API calls needs more resource (every time it has to hash the password)
+        - browser remember username & password
+        - not recommended for web apps
+
+- An alternative
+    - login endpoint returns the token (valid for xx hours) and keeps it in token store
+    - consumer uses then that token as its credential
+    - API validates the token
+
+- What could be implemented:
+    - token based authentication
+    - store as session cookie
+    - 15 minutes validity period
+
+- Session cookie
+    - session/transient/non-persistent cookie (stored in memory temporarily)
+    - temporary while the user navigates the website
+    - web browser usually deletes it on close
+    - possible to set maximum age to control the expiration even if the browser is not closed
+
+### Session fixation threat
+
+- this type of authentication works, but it is vulnerable
+- checks the session -> `request.getSession(true)`
+    - no existing session: creates a new session
+    - existing session: returns the existing session ID (the same session ID it there was one before that)
+
+1. Attacker logs in and gets the session ID AB56
+2. he sends the dangerous link with the session ID AB56 to a victim
+3. a victim logs in with his own credentials and because the server has session ID stored it stores victim's credentials
+4. now the attacker can use victim's account (credentials) with his session ID
+
+**Prevent session id**
+
+- don't use the fixed session id
+- invalidate session
+
+- Cookie security attributes
+    - **HttpOnly**: can't be read by JavaScript, so cross-site scripting is not possible
+    - **Secure**: cookie can be sent only using HTTPS
+
+### CSRF (Cross Site Request Forgery)
+
+- a victim is logged in to our app
+- it gets the session cookie
+- while he's logged in, he receives a dangerous link from an attacker
+- he goes to that link and attacker will reuse its cookie and send it to our app from his page
+
+Prevent CSRF:
+
+- if UI and API are on the same domain, use **SameSite** cookies
+    - cookie will only be sent if the request domain is equal to the original cookie domain
+    - dangerous UI (different domain) can't send the cookie
+- Proofing that the consumer really knows the session cookie
+    - use the token on custom header + session cookie
+    - hashed string value (hard to guess) -> hash-based double submit cookie
+
+### Timing attack
+
+- String equality (`String.equals()`) returns on first non-matching character
+- the attacker can track the response time, getting in that way the number of characters that do match
+- he then arranges the matching character for the legitimate string
+- time calculation must be very precise (in nanoseconds); this is theoretically possible but hardly exploitable
+  -> factors network latency, context switching, garbage collection takes a few milliseconds etc.
+- securing is better
+- `MessageDigest.isEqual` is better option
+    - compares string bytes
+    - calculation time is constant (based on 1st string's length)
+
+## Cross Origin Resource Sharing - CORS
+
+- in browser only
+- protection policy - both sides must be on the same domain by default
+- restrict scripts from one origin to another
+
+```
+mydomain.com ----> api.mydomain.com is blocked per se by Same-Origin Policy (SOP)
+```
+
+- origin: scheme-domain-port -> https://sub.domain.com:7777/<<<page/shopping-cart>>>
+- Origin policy:
+    - allowed HTTP headers
+    - allowed HTTP methods (POST, PUT, GET,...)
+- Preflight request:
+    - the browser sends a small request to server to check if it will accept the actual request
+    - OPTIONS method is used (the same URL as the target endpoint) - it sends which origin, headers, method are used... 
+  and gets 200 or 403
+
+```
+https://mydomain.com:5555 ----> https://other.com:8888
+
+mydomain.com
+Hi API, I'm https://mydomain.com port 5555. I'd like to send a POST request with HTTP header X-Custom, is it allowed?
+
+server: Yes, go ahead
+browser: sends the request
+```
+
+- Import response headers:
+    - `Access-Control-Allow-Origin`
+    - `Access-Control-Allow-Methods`
+    - `Access-Control-Allow-Headers`
+    - `Access-Control-Allow-Credentials` - browser cookies, password and TLS certificates
+    - `Access-Control-Max-Age` - the max number of seconds that browser can cache CORS headers
+    - `Access-Control-Expose-Headers` - the list of the headers that can be returned in response
+
+
+- Spring `CrossOrigin`; default values:
+    - Allow all origins - `Access-Control-Allow-Origin: *`
+    - Allow specified method on `@XXXMapping` or `@RequestMapping(method = RequestMethod.XXX)`
+    - Allow all headers
+
+- `@CrossOrigin` parameters:
+
+```
+origins: String[]  -> Access-Control-Allow-Origin
+methods: RequestMethod[]  -> Access-Control-Allow-Methods
+allowedHeaders: String[]  -> Access-Control-Allow-Headers
+allowCredentials: String[]  -> Access-Control-Allow-Credentials
+maxAge: long  -> Access-Control-Max-Age
+exposedHeaders: String[]  -> Access-Control-Expose-Headers
+```
+- Can be used on an endpoint level (method), at class level, at global level
+
+- CORS preflight request
+- `SameSite` and CORS headers?

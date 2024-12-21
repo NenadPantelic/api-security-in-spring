@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript" src="cors.js"></script>
+    <style type="text/css">
+        button {
+            margin-right: 50%;
+        }
+
+        * {
+            font-size: 36px;
+        }
+    </style>
+</head>
+<body>
+<h2>PingPong</h2>
+<button type="submit" onclick="fetchPing()">GET   Ping</button>
+<button type="submit" onclick="fetchPong()">POST   Pong</button>
+
+<h2>MadMax</h2>
+<button type="submit" onclick="fetchMad()">GET   Mad</button>
+<button type="submit" onclick="fetchMax()">POST   Max</button>
+
+<div id="display"></div>
+</body>
+</html>
+
+<!-- http://localhost:8080/cors.html -->
+<!-- http://127.0.0.1:8080/cors.html -->
+<!-- the second one is blocked by CORS policy-->
