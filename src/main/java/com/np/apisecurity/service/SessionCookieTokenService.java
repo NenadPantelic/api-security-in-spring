@@ -5,14 +5,12 @@ import com.np.apisecurity.api.util.SecureStringUtil;
 import com.np.apisecurity.constant.SessionCookieConstant;
 import com.np.apisecurity.dto.internal.SessionCookieToken;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.tika.utils.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 
-@Slf4j
 @Service
 public class SessionCookieTokenService {
 

@@ -9,13 +9,10 @@ Content-Type: application/json
 	"displayName": "npntlc"
 }
 
-
-
 ### Get time - valid credentials
 GET http://localhost:8080/api/auth/basic/v1/time
 Content-Type: application/json
 Authorization: Basic bnBhbnRlbGljOnBhc3N3b3JkMTIz
-
 
 ### Get time - invalid credentials
 GET http://localhost:8080/api/auth/basic/v1/time

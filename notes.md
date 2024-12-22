@@ -844,3 +844,131 @@ exposedHeaders: String[]  -> Access-Control-Expose-Headers
       => centralized database
         - keep it safe (protection level); do not keep it in the source code
         - Key management service - Cloud (AWS, Heroku, Google Cloud...) or our server - Hashicorp Vault
+
+## JSON Web Token (JWT)
+
+- overhead for maintaining the data storage on server
+- an alternative:
+    - no data storage
+    - secure token data
+    - send to client
+    - client use token for API request
+    - data + how to validate available on token
+
+- JWT:
+    1. header
+    2. payload
+    3. signature
+- `Header.Payload.Signature`
+
+### Header
+
+- contains the information/metadata about the token itself
+
+```json
+{
+  "type": "JWT",
+  "alg": [
+    sign-algorithm
+  ]
+}
+```
+
+- e.g.
+
+```json
+{
+  "type": "JWT",
+  "alg": "HS256"
+}
+```
+
+- base64 encoded JSON string
+- Standard header fields:
+
+1. `alg` - defines HMAC algorithm; e.g. `HS256`
+2. `typ` - defines media type. Since we use JWT, usually this has fixed value "JWT"; e.g. `JWT`
+3. `kid` - key ID to lookup HMAC keys on server side; e.g. `my-key-1`
+4. `jwk` - key for HMAC. Writing this to the header makes JWT vulnerable to attack; e.g. `thisIsMySecretKey`
+5. `jku` - URL to retrieve HMAC key. Writing this to the header makes JWT vulnerable;
+   e.g. https://mystorage.com/jwt/my-secret-key
+
+- Since we can have multiple keys, all of them should have their own id; with it we know which key is being used
+
+### Payload
+
+- it contains claims (standard ones according to RFC-7519 and custom ones)
+
+```json
+{
+  "iss": "apisecurity.com",
+  // issuer
+  "exp": "1640988000"
+}
+```
+
+- base64 encoded JSON string
+- Payload standard claims:
+
+1. `iss` - issuer, who issued the JWT token. Generally application name or authentication provider;
+   e.g. `apisecurity.com`
+2. `sub` - subject, usually username or other unique identifier of the client; e.g. `elsa@apisecurity.com`
+3. `aud` - audience; for whom this token is valid. Usually a URI where server has a set of valid URIs to check against;
+   e.g. `https://apisecurity.com`
+4. `exp` - expiration time, epoch second when this token will become invalid; e.g. 1643327549
+5. `nbf` - not before, JWT token start valid time in epoch second (not valid to use before this moment); e.g. 1640905495
+
+- Private claims:
+
+1. role - user role; e.g. member-diamond
+2. amount - purchase amount to be paid; e.g. 2700
+3. birthDate - customer birthdate; e.g. 2001-04-20
+4. location - latitude & longitude; -6.12324236, 106.6754016459387
+
+- clock skew
+    - time validation happens for `nbf` and `exp`
+    - clock skew means there is some time difference between nodes (faster or slower time)
+    - should give some tolerance (some delta time - a few mins max) when validating timestamp fields; this tolerance
+      is called Leeway
+
+### Signature
+
+- `hash(header.payload, secret)` - used to verify the integrity of the token; e.g.
+  `HMACSHA256(header-base64.payload-base64, "mySecret123")`
+
+- we don't have to use all predefined JWT fields
+
+#### JWT threats
+
+- in 2015, Tim McClean discovered vulnerabilities in many JWT libraries where the attacker can change the algorithm
+  (`alg`) in JWT header, even to none (no need to validate the signature)
+- Server does not maintain the token state
+- No way for server to revoke the token
+- Replay attack: attacker can steal & use valid token
+- For that reason, do not use the long-living JWT
+- hybrid JWT - store jti (JWT ID) in database and remove it when someone wants to logout (keep it there as long as
+  someone
+  is logged in); easy to revoke such JWTs
+
+#### JWT, JWS, JWE, JOSE
+
+- JWT is an interface, a standard
+- there are two implementations of it:
+
+1. JWS - JSON Web Signature (more common implementation) -> Header.Payload.Signature
+
+- header is also known as JOSE - JavaScript Object Signing and Encryption
+- payload can be easily decoded (base64), so we should not add any secret to it
+
+2. JWE - JSON Web Encryption
+
+- consists of 5 parts:
+
+1. Header
+2. 2nd JWE part - encrypted key
+3. 3rd JWE part - initialization vector (IV)
+4. 4th JWE part - ciphertext
+5. 5th JWE part - authentication tag
+
+- JWE can also contain the secret data in claims since it encrypts and guards the data in claims
+- payload: plain string, json, string, jws payload

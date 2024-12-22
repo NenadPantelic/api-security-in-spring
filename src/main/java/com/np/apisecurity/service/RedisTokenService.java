@@ -6,7 +6,6 @@ import com.np.apisecurity.api.util.HmacUtil;
 import com.np.apisecurity.api.util.SecureStringUtil;
 import com.np.apisecurity.dto.internal.RedisToken;
 import io.lettuce.core.api.StatefulRedisConnection;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -15,20 +14,18 @@ import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
 import java.util.Optional;
 
-@Slf4j
 @Service
 public class RedisTokenService {
 
     private static final String HMAC_SECRET = "theHmacSecretKey";
 
-    private final StatefulRedisConnection redisConnection;
+    private final StatefulRedisConnection<String, String> redisConnection;
     private final ObjectMapper objectMapper;
 
-    public RedisTokenService(StatefulRedisConnection redisConnection, ObjectMapper objectMapper) {
+    public RedisTokenService(StatefulRedisConnection<String, String> redisConnection, ObjectMapper objectMapper) {
         this.redisConnection = redisConnection;
         this.objectMapper = objectMapper;
     }
-
 
     public String store(RedisToken token) {
         var tokenId = SecureStringUtil.generateRandomString(30);
@@ -59,7 +56,7 @@ public class RedisTokenService {
                 return Optional.empty();
             }
 
-            var tokenJson = (String) redisConnection.sync().get(tokenId);
+            var tokenJson = redisConnection.sync().get(tokenId);
             if (StringUtils.isBlank(tokenJson)) {
                 return Optional.empty();
             }
