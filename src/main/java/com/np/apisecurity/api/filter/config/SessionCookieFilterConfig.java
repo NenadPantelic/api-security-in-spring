@@ -1,12 +1,11 @@
 package com.np.apisecurity.api.filter.config;
 
-import com.np.apisecurity.api.filter.sessioncookie.SessionCookieAuthFilter;
+import com.np.apisecurity.api.filter.sessioncookie.SessionCookieBasicAuthFilter;
 import com.np.apisecurity.api.filter.sessioncookie.SessionCookieTokenFilter;
 import com.np.apisecurity.repository.basicauth.BasicAuthUserRepository;
 import com.np.apisecurity.service.SessionCookieTokenService;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 //@Configuration
 public class SessionCookieFilterConfig {
@@ -21,9 +20,9 @@ public class SessionCookieFilterConfig {
     }
 
     @Bean
-    public FilterRegistrationBean<SessionCookieAuthFilter> sessionCookieAuthFilter() {
-        var registrationBean = new FilterRegistrationBean<SessionCookieAuthFilter>();
-        registrationBean.setFilter(new SessionCookieAuthFilter(basicAuthUserRepository));
+    public FilterRegistrationBean<SessionCookieBasicAuthFilter> sessionCookieAuthFilter() {
+        var registrationBean = new FilterRegistrationBean<SessionCookieBasicAuthFilter>();
+        registrationBean.setFilter(new SessionCookieBasicAuthFilter(basicAuthUserRepository));
         registrationBean.addUrlPatterns("/api/auth/session-cookie/v1/login");
         return registrationBean;
     }

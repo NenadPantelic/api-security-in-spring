@@ -25,13 +25,13 @@ import java.security.InvalidKeyException;
 import java.util.Optional;
 
 @Slf4j
-public class SessionCookieAuthFilter extends OncePerRequestFilter {
+public class SessionCookieBasicAuthFilter extends OncePerRequestFilter {
 
     private static final String BASIC_AUTH = "Basic ";
 
     private final BasicAuthUserRepository basicAuthUserRepository;
 
-    public SessionCookieAuthFilter(BasicAuthUserRepository basicAuthUserRepository) {
+    public SessionCookieBasicAuthFilter(BasicAuthUserRepository basicAuthUserRepository) {
         this.basicAuthUserRepository = basicAuthUserRepository;
     }
 

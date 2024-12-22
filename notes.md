@@ -759,8 +759,8 @@ mydomain.com ----> api.mydomain.com is blocked per se by Same-Origin Policy (SOP
     - allowed HTTP methods (POST, PUT, GET,...)
 - Preflight request:
     - the browser sends a small request to server to check if it will accept the actual request
-    - OPTIONS method is used (the same URL as the target endpoint) - it sends which origin, headers, method are used... 
-  and gets 200 or 403
+    - OPTIONS method is used (the same URL as the target endpoint) - it sends which origin, headers, method are used...
+      and gets 200 or 403
 
 ```
 https://mydomain.com:5555 ----> https://other.com:8888
@@ -796,7 +796,51 @@ allowCredentials: String[]  -> Access-Control-Allow-Credentials
 maxAge: long  -> Access-Control-Max-Age
 exposedHeaders: String[]  -> Access-Control-Expose-Headers
 ```
+
 - Can be used on an endpoint level (method), at class level, at global level
 
 - CORS preflight request
 - `SameSite` and CORS headers?
+
+## Token without cookies
+
+- Cookies work just fine when the origin is the same, but when we use different origins, things are harder
+- which token store to use? Auth token characteristics:
+    - validated on each request
+    - simple data structure
+    - not changed once issued
+- we need something fast that can handle these characteristics
+- Redis or RDBMS?
+- Redis
+    - match characteristics (fast, simple data)
+    - expired feature
+- Relational database
+    - No Redis node
+    - low traffic
+    - we need scheduler to delete the expired tokens
+
+- Authorization bearer -> header `Authorization: Bearer <token>`
+
+- Threats
+    - Client: LocalStore: XSS injection (an attacker injects the script to read the local storage)
+    - Storage (RDBMS): SQL injection
+    - Redis: if unsecured can steal the tokens
+- Prevention:
+    - token with HMAC
+        - do not keep HMAC value in the database (if it gets compromised)
+        - verify data integrity
+        - verify request token
+        - valid token + invalid HMAC = invalid request
+        - send in Authorization header: `Bearer myToken.hmac(myToken)` - keep the key used to compute HMAC safely (not
+          in
+          the database)
+- Key storage (tips):
+    - keep it in a separate file
+    - don't push to repository
+    - encrypt the key on file
+    - example: jasypt for encryption
+    - pro: simple
+    - cons: big maintenance effort (if we have several servers where we have to maintain them)
+      => centralized database
+        - keep it safe (protection level); do not keep it in the source code
+        - Key management service - Cloud (AWS, Heroku, Google Cloud...) or our server - Hashicorp Vault
