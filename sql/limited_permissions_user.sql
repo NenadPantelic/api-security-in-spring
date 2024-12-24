@@ -28,4 +28,4 @@ ON schema public TO apisecurity;
 
 GRANT 
 SELECT, INSERT, UPDATE, DELETE
-ON jdbc_customer, jdbc_merchant, jpa_customer, basic_auth_user TO apisecurity;
+ON jdbc_customer, jdbc_merchant, jpa_customer, basic_auth_user, basic_api_key TO apisecurity;

@@ -972,3 +972,16 @@ exposedHeaders: String[]  -> Access-Control-Expose-Headers
 
 - JWE can also contain the secret data in claims since it encrypts and guards the data in claims
 - payload: plain string, json, string, jws payload
+
+- JWT libraries:
+  - Not all libraries have JWE
+    - Previous (Auth0) does not support
+    - nimbus lib does
+
+## API key
+- a simple token to authenticate the user request; usually a long living thing
+- sending API keys:
+  - as part of the url: `https://myserver.com/api/customers?apiKey=thisIsTheApiKey` (bad practise, exposed, browsers save
+  the history)
+  - as a custom header, e.g.: `X-Api-Key`
+- API keys are stored (in database, but also can be stored in cache to improve the performance)
