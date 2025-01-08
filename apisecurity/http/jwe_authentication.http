@@ -1,0 +1,10 @@
+### Login
+POST http://localhost:8080/api/auth/jwe/v1/login
+Content-Type: application/json
+Authorization: Basic bnBhbnRlbGljOnBhc3N3b3JkMTIz
+
+
+### Get time
+GET http://localhost:8080/api/auth/jwe/v1/time
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0NDNmYzA3YjFkM2EyMmI5OTIyNzg2YTMxNGNiZDNjOCIsImlzcyI6ImFwaXNlY3VyaXR5LmNvbSIsImF1ZCI6WyJodHRwczovL2FwaXNlY3VyaXR5LmNvbSIsImh0dHBzOi8vd3d3LmFwaXNlY3VyaXR5LmNvbSJdLCJleHAiOjE3MzQ4OTg3MzMsImR1bW15QXR0cmlidXRlIjpudWxsLCJzYW1wbGVQcml2YXRlQ2xhaW0iOiJqdXN0LXNvbWUtcHJpdmF0ZS1jbGFpbS10by1iZS12YWxpZGF0ZWQifQ.V3QrlYRaZmsy3M0rKgQvyMNblyFGnro2ttFybigmT3U

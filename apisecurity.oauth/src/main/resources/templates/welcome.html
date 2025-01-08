@@ -1,0 +1,24 @@
+<table style="width: 25%; text-align: center">
+	<thead>
+		<tr>
+			<th>Attribute</th>
+			<th>Value</th>
+	</thead>
+
+	<tbody>
+		<tr>
+			<td>Given name</td>
+			<td><span
+				th:text="${#authentication.principal.attributes['given_name']}"></span>
+			</td>
+		</tr>
+		<tr>
+			<td>Family name</td>
+			<td><span
+				th:text="${#authentication.principal.attributes['family_name']}"></span>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<br/>
+<a href="/">home</a>

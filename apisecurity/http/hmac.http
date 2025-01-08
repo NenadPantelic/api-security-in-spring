@@ -1,0 +1,30 @@
+### Encode Base64
+POST http://localhost:8080/api/v1/hmac/calculate
+Content-Type: application/json
+X-Verb-Calculate: POST
+X-Uri-Calculate: /api/v1/hmac/info
+X-Register-Date: 2020-02-20
+X-Nonce: 14Ns7vZa
+
+{
+  "fullName": "Nenad Pantelic",
+  "city": "Kragujevac",
+  "gender": "M",
+  "amount": "1996"
+}
+
+
+
+### 
+POST http://localhost:8080/api/v1/hmac/info
+Content-Type: application/json
+X-Register-Date: 2020-02-20
+X-Nonce: 14Ns7vZa
+X-Hmac: c1ad581de49b585c3d8d6a6cb17304cbf21593a911546fb6159248a6c48430ca
+
+{
+  "fullName": "Nenad Pantelic",
+  "city": "Kragujevac",
+  "gender": "M",
+  "amount": "1996"
+}

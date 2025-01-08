@@ -1,0 +1,22 @@
+### Login
+POST http://localhost:8080/api/auth/redis/v1/login
+Content-Type: application/json
+Authorization: Basic bnBhbnRlbGljOnBhc3N3b3JkMTIz
+
+
+### Get time
+GET http://localhost:8080/api/auth/redis/v1/time
+Content-Type: application/json
+Authorization: Bearer ryXcaopjkxpyYcsaTvA2qChzooTpWk.9cf34c1de07da7e16ca6143ed7624779e67f0053513018aea28597b9ee9b8451
+
+
+
+### Get time
+GET http://localhost:8080/api/auth/redis/v1/time
+Content-Type: application/json
+Authorization: Bearer ryXcaopjkxpyYcsaTvA2qChzooTpWk.
+
+
+### Logout
+DELETE http://localhost:8080/api/auth/redis/v1/logout
+Authorization: Bearer ryXcaopjkxpyYcsaTvA2qChzooTpWk.9cf34c1de07da7e16ca6143ed7624779e67f0053513018aea28597b9ee9b8451

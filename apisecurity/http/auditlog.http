@@ -1,0 +1,7 @@
+POST  http://localhost:8080/api/log/v1/randm-status
+Content-Type: application/json
+
+{
+      
+  "text": "He's a Johny good fellow"  
+}

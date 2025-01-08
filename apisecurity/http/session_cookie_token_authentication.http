@@ -1,0 +1,15 @@
+### Login
+POST http://localhost:8080/api/auth/session-cookie/v1/login
+Content-Type: application/json
+Authorization: Basic bnBhbnRlbGljOnBhc3N3b3JkMTIz
+
+
+### Get time
+GET http://localhost:8080/api/auth/session-cookie/v1/time
+Content-Type: application/json
+X-CSRF: 851d6d3a9b63f0cb96ad0f9f0349f74cdad24e84023d510d537b5ae735513b98
+
+
+### Logout
+DELETE http://localhost:8080/api/auth/session-cookie/v1/logout
+X-CSRF: 851d6d3a9b63f0cb96ad0f9f0349f74cdad24e84023d510d537b5ae735513b98

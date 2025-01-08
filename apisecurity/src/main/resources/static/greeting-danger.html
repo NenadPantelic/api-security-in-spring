@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <style type="text/css">
+        * {
+            font-size: 36px;
+        }
+    </style>
+</head>
+
+<body>
+<div>
+    <h2>Greeting Danger</h2>
+</div>
+<form action="#" method="get">
+    <div>
+        Name: <input type="text" id="name" />
+    </div>
+    <div>
+        <button id="submit">Submit</button>
+    </div>
+    <div id="greeting"></div>
+</form>
+</body>
+
+<script type="text/javascript">
+    const button = document.getElementById('submit');
+
+    button.addEventListener('click', async _ => {
+        const name = document.getElementById('name').value;
+
+        console.log('Name: ', name);
+        let response = await fetch('http://localhost:8080/api/xss/dangerous/v1/greeting?name=' + name);
+        response.text().then(function(text) {
+            document.getElementById('greeting').innerHTML = text;
+        });
+    });
+</script>
+</html>
+
+<!-- http://localhost:8080/greeting-danger.html -->
