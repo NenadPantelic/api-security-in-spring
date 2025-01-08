@@ -1,4 +1,0 @@
-### Get time
-GET http://localhost:8080/api/auth/api-key/v1/add?a=1&b=2
-Content-Type: application/json
-X-Api-Key: elsaApiKey101
